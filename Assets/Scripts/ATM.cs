@@ -3,23 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum ALERTS
+{
+    INSUFFICIENT,
+    INPUT_ERROR,
 
+}
 
 public class ATM : MonoBehaviour
 {
     public static ATM instance;
 
+    public Text textName;
     public Text textCash;
     public Text textBalance;
 
-    public GameObject Menu; //TODO : main +
-    public GameObject Deposit; //TODO :  + menu
-    public GameObject Withdraw; //TODO :  + menu
+    public GameObject mainMenu; //TODO : main +
+    public GameObject depositMenu; //TODO :  + menu
+    public GameObject withdrawMenu; //TODO :  + menu
 
     public Customer customer;
     Account account;
 
-    public List<GameObject> Alerts;
+    public InputField depositAmount;
+    public InputField withdrawAmount;
+
+    public GameObject[] Alerts;
 
     private void Awake()
     {
@@ -40,44 +49,43 @@ public class ATM : MonoBehaviour
 
     public void ShowMenu()
     {
-        Menu.SetActive(true);
-        Deposit.SetActive(false);
-        Withdraw.SetActive(false);
+        mainMenu.SetActive(true);
+        depositMenu.SetActive(false);
+        withdrawMenu.SetActive(false);
     }
 
     public void ShowDeposit()
     {
-        Menu.SetActive(false);
-        Deposit.SetActive(true);
-        Withdraw.SetActive(false);
+        mainMenu.SetActive(false);
+        depositMenu.SetActive(true);
+        withdrawMenu.SetActive(false);
     }
 
     public void ShowWithdraw()
     {
-        Menu.SetActive(false);
-        Deposit.SetActive(false);
-        Withdraw.SetActive(true);
+        mainMenu.SetActive(false);
+        depositMenu.SetActive(false);
+        withdrawMenu.SetActive(true);
     }
 
     public void RequestDeposit(int _cash)
     {
-        if(account.Deposit(_cash))
-        {
-        }
-        else
-        {
-            // TODO : 입금 불가 팝업
-        }
+        if(_cash == -1)
+            _cash = int.Parse(depositAmount.text);
+
+        if (!account.Deposit(_cash))
+            ShowAlert(ALERTS.INSUFFICIENT);
 
         ShowCustomerInform();
     }
 
     public void RequestWithdraw(int _cash)
     {
-        if (account.Withdraw(_cash))
-        { }
-        else { }
-
+        if (_cash == -1)
+            _cash = int.Parse(withdrawAmount.text);
+        
+        if (!account.Withdraw(_cash))
+            ShowAlert(ALERTS.INSUFFICIENT);
         ShowCustomerInform();
     }
 
@@ -85,5 +93,15 @@ public class ATM : MonoBehaviour
     {
         textCash.text = customer.cash.ToString();
         textBalance.text = account.balance.ToString();
+    }
+
+    private void ShowAlert(ALERTS alert)
+    {
+        Alerts[(int)alert].SetActive(true);
+    }
+
+    public void HideAlert(ALERTS alert)
+    {
+        Alerts[(int)alert].SetActive(false);
     }
 }

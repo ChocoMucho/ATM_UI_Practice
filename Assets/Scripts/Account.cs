@@ -20,20 +20,30 @@ public class Account : MonoBehaviour
     }
 
 
-    // TODO : 입출금 유효 판단
-    public bool Deposit(int _cash)
+    // TODO : 입출금 유효 판단 후 진행
+    public bool Deposit(int _cash) //입금
     {
-        customer.cash -= _cash;
-        balance += _cash;
+        if(customer.cash <=0 )
+            return false;
+        else
+        {
+            customer.cash -= _cash;
+            balance += _cash;
 
-        return true;
+            return true;
+        }
     }
 
-    public bool Withdraw(int _cash)
+    public bool Withdraw(int _cash) //출금
     {
-        balance -= _cash;
-        customer.cash += _cash;
+        if(balance <= 0)
+            return false;
+        else
+        {
+            balance -= _cash;
+            customer.cash += _cash;
 
-        return true;
+            return true;
+        }
     }
 }
