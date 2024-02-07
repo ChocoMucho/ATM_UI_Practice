@@ -5,43 +5,37 @@ using UnityEngine.UI;
 
 public class Account : MonoBehaviour
 {
-    Customer customer;
-    string customerId = "";
+    public Customer Customer { get; set; }
     public int balance = 50000;
 
     void Start()
     {
-        customer = ATM.instance.customer;
-    }
-
-    void Update()
-    {
-        
+        Customer = ATM.instance.customer;
     }
 
 
-    // TODO : 입출금 유효 판단 후 진행
-    public bool Deposit(int _cash) //입금
+
+    public bool Deposit(int amount) //입금
     {
-        if(customer.cash <=0 )
+        if(Customer.cash < amount)
             return false;
         else
         {
-            customer.cash -= _cash;
-            balance += _cash;
+            Customer.cash -= amount;
+            balance += amount;
 
             return true;
         }
     }
 
-    public bool Withdraw(int _cash) //출금
+    public bool Withdraw(int amount) //출금
     {
-        if(balance <= 0)
+        if(balance < amount)
             return false;
         else
         {
-            balance -= _cash;
-            customer.cash += _cash;
+            balance -= amount;
+            Customer.cash += amount;
 
             return true;
         }
